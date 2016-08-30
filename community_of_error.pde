@@ -42,12 +42,11 @@ void drawPerform() {
   drawLogo();
 
   String text = texts.get(chosenTextIndex);
-  int totalLength = text.length();
-  //TODO logic is to move charIndex wrt totalLength
+  text = getNextTwoLines(chosenTextIndex);
   String[] lines = split(text, "\n");
   String line1 = lines[0];
   String line2 = "";
-  if (lines.length > 0) line2 = lines[1];
+  if (lines.length > 1) line2 = lines[1];
   drawLine(line1, charIndex, (height - 128));
   drawLine(line2, charIndex - (line1.length()), (height - 64));
 
@@ -63,9 +62,25 @@ void drawPerform() {
   }
 }
 
+String getNextTwoLines(int index) {
+  String text = texts.get(index);
+  String t = "";
+  String u = "";
+  int i = 0;
+  while((textWidth(t) < width - 64) && (i < text.length())) {
+    t += text.charAt(i);
+    i++;
+  }
+  while((textWidth(u) < width - 64) && (i < text.length())) {
+    u += text.charAt(i);
+    i++;
+  }
+  return t + "\n" + u;
+}
+
 void drawLine(String line, int charIndex, int yDis) {
-  if (charIndex < 0) charIndex = 0;
-  if (charIndex > line.length()-1) charIndex = line.length() - 1; 
+  if (charIndex > line.length()-1) charIndex = line.length() - 1;
+  if (charIndex < 0) charIndex = 0; 
   String t = line.substring(0, charIndex);
   String u = line.substring(charIndex);
   fill(highlight);
@@ -82,6 +97,9 @@ void drawLogo() {
 
 void drawChoose() {
   background(bg);
+  text("Confession 0: press 0", 30, 64);
+  text("Confession 1: press 1", 30, 128);
+  text("Confession 2: press 2", 30, 192);
 }
 
 void keyTyped() {
