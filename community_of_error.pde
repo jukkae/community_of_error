@@ -10,7 +10,7 @@ int currentLine = 0;
 int charIndex = 0;
 int charSkip = 0;
 int textSize = 32;
-int delay = 50;
+int delay = 25;
 color bg = color(0);
 color normal = color(255, 255, 255);
 color highlight = color(255, 255, 0);
@@ -42,14 +42,13 @@ void draw() {
 void drawPerform() {
   background(bg);
   drawLogo();
-  String wholeText = texts.get(chosenTextIndex);
 
   drawTwoLines(charSkip);
 
   if (charIndex < texts.get(chosenTextIndex).length()) {
     charIndex++;
-    if((charIndex + charSkip) > (getNextTwoLines(chosenTextIndex, charSkip).length()) - charSkip) {
-      charSkip = charIndex;
+    if((charIndex) > (getNextTwoLines(chosenTextIndex, charSkip).length())) {
+      charSkip += (charIndex - 2); //TODO why???
       charIndex = 0;
     }
   } else {
