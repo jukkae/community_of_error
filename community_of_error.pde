@@ -4,11 +4,13 @@ enum Mode {
 
 static Mode mode;
 ArrayList<String> texts;
-int chosenTextIndex = 1;
+int chosenTextIndex;
+int lastTextIndex = 0;
 int currentLine = 0;
 int charIndex = 0;
+int charSkip = 0;
 int textSize = 32;
-int delay = 100;
+int delay = 50;
 color bg = color(0);
 color normal = color(255, 255, 255);
 color highlight = color(255, 255, 0);
@@ -22,7 +24,7 @@ void setup() {
   mode = Mode.CHOOSE;
   texts = new ArrayList<String>();
   texts.add("Hello, World!");
-  texts.add("All in all it's just \nanother brick in the wall");
+  texts.add("All in all it's just another brick in the wall");
   texts.add("I was put in charge of the music playlist for my Grandfather's funeral, which consisted of quite beautiful classical and choir music selected by my Grandmother. I had everything set up in playlists on my Spotify account and felt a little nervous but prepared. I started to play the first playlist as people entered, but what I didn't realize is that the \"Up Next\" feature overrides the playlist feature, so instead of playing the next classical song in the playlist, my phone started to blare \"Born to Be Wild\". I heard it as I walked in and luckily cut it off, but not before I heard a few chuckles.");
 }
 
@@ -40,9 +42,25 @@ void draw() {
 void drawPerform() {
   background(bg);
   drawLogo();
+  String wholeText = texts.get(chosenTextIndex);
 
-  String text = texts.get(chosenTextIndex);
-  text = getNextTwoLines(chosenTextIndex);
+  drawTwoLines(charSkip);
+
+  if (charIndex < texts.get(chosenTextIndex).length()) {
+    charIndex++;
+    if((charIndex + charSkip) > (getNextTwoLines(chosenTextIndex, charSkip).length()) - charSkip) {
+      charSkip = charIndex;
+      charIndex = 0;
+    }
+  } else {
+    charIndex = 0;
+    mode = Mode.CHOOSE;
+  }
+}
+
+void drawTwoLines(int i) {
+
+  String text = getNextTwoLines(chosenTextIndex, i);
   String[] lines = split(text, "\n");
   String line1 = lines[0];
   String line2 = "";
@@ -51,31 +69,6 @@ void drawPerform() {
   drawLine(line2, charIndex - (line1.length()), (height - 64));
 
   delay(delay);
-
-  if (charIndex < text.length()) {
-    if (currentLine == 0) {
-      charIndex++;
-    }
-  } else {
-    charIndex = 0;
-    mode = Mode.CHOOSE;
-  }
-}
-
-String getNextTwoLines(int index) {
-  String text = texts.get(index);
-  String t = "";
-  String u = "";
-  int i = 0;
-  while((textWidth(t) < width - 64) && (i < text.length())) {
-    t += text.charAt(i);
-    i++;
-  }
-  while((textWidth(u) < width - 64) && (i < text.length())) {
-    u += text.charAt(i);
-    i++;
-  }
-  return t + "\n" + u;
 }
 
 void drawLine(String line, int charIndex, int yDis) {
@@ -88,6 +81,22 @@ void drawLine(String line, int charIndex, int yDis) {
   float displacement = textWidth(t);
   fill(normal);
   text(u, 30 + displacement, yDis);
+}
+
+String getNextTwoLines(int textIndex, int startIndex) {
+  String text = texts.get(textIndex);
+  String t = "";
+  String u = "";
+  int i = startIndex;
+  while ((textWidth(t) < width - 64) && (i < text.length())) {
+    t += text.charAt(i);
+    i++;
+  }
+  while ((textWidth(u) < width - 64) && (i < text.length())) {
+    u += text.charAt(i);
+    i++;
+  }
+  return t + "\n" + u;
 }
 
 void drawLogo() {
