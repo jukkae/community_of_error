@@ -5,6 +5,7 @@ enum Mode {
 static Mode mode;
 ArrayList<String> texts;
 int chosenTextIndex = 1;
+int currentLine = 0;
 int charIndex = 0;
 int textSize = 32;
 int delay = 100;
@@ -21,40 +22,57 @@ void setup() {
   mode = Mode.CHOOSE;
   texts = new ArrayList<String>();
   texts.add("Hello, World!");
-  texts.add("All in all it's just another brick in the wall");
+  texts.add("All in all it's just \nanother brick in the wall");
   texts.add("I was put in charge of the music playlist for my Grandfather's funeral, which consisted of quite beautiful classical and choir music selected by my Grandmother. I had everything set up in playlists on my Spotify account and felt a little nervous but prepared. I started to play the first playlist as people entered, but what I didn't realize is that the \"Up Next\" feature overrides the playlist feature, so instead of playing the next classical song in the playlist, my phone started to blare \"Born to Be Wild\". I heard it as I walked in and luckily cut it off, but not before I heard a few chuckles.");
 }
 
 void draw() {
   switch(mode) {
-    case CHOOSE:
-      drawChoose();
-      break;
-    case PERFORM:
-      drawPerform();
-      break;
+  case CHOOSE:
+    drawChoose();
+    break;
+  case PERFORM:
+    drawPerform();
+    break;
   }
 }
 
 void drawPerform() {
   background(bg);
   drawLogo();
-  
+
   String text = texts.get(chosenTextIndex);
-  String t = text.substring(0, charIndex);
-  String u = text.substring(charIndex);
-  fill(highlight);
-  text(t, 30, (height - 48));
-  float displacement = textWidth(t);
-  fill(normal);
-  text(u, (30 + displacement), (height - 48));  
-  
+  int totalLength = text.length();
+  //TODO logic is to move charIndex wrt totalLength
+  String[] lines = split(text, "\n");
+  String line1 = lines[0];
+  String line2 = "";
+  if (lines.length > 0) line2 = lines[1];
+  drawLine(line1, charIndex, (height - 128));
+  drawLine(line2, charIndex - (line1.length()), (height - 64));
+
   delay(delay);
-  if (charIndex < text.length()) charIndex++;
-  else {
+
+  if (charIndex < text.length()) {
+    if (currentLine == 0) {
+      charIndex++;
+    }
+  } else {
     charIndex = 0;
     mode = Mode.CHOOSE;
   }
+}
+
+void drawLine(String line, int charIndex, int yDis) {
+  if (charIndex < 0) charIndex = 0;
+  if (charIndex > line.length()-1) charIndex = line.length() - 1; 
+  String t = line.substring(0, charIndex);
+  String u = line.substring(charIndex);
+  fill(highlight);
+  text(t, 30, yDis);
+  float displacement = textWidth(t);
+  fill(normal);
+  text(u, 30 + displacement, yDis);
 }
 
 void drawLogo() {
