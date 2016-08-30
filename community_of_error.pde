@@ -10,7 +10,7 @@ int currentLine = 0;
 int charIndex = 0;
 int charSkip = 0;
 int textSize = 32;
-int delay = 25;
+int delay = 10;
 color bg = color(0);
 color normal = color(255, 255, 255);
 color highlight = color(255, 255, 0);
@@ -47,12 +47,14 @@ void drawPerform() {
 
   if (charIndex < texts.get(chosenTextIndex).length()) {
     charIndex++;
-    if((charIndex) > (getNextTwoLines(chosenTextIndex, charSkip).length())) {
+    if ((charIndex) > (getNextTwoLines(chosenTextIndex, charSkip).length())) {
       charSkip += (charIndex - 2); //TODO why???
       charIndex = 0;
     }
-  } else {
+  }
+  if (charIndex + charSkip >= texts.get(chosenTextIndex).length()) {
     charIndex = 0;
+    charSkip = 0;
     mode = Mode.CHOOSE;
   }
 }
