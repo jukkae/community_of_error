@@ -5,19 +5,19 @@ enum Mode {
 static Mode mode;
 ArrayList<String> texts;
 int chosenTextIndex;
-int lastTextIndex = 0;
 int currentLine = 0;
 int charIndex = 0;
 int charSkip = 0;
 int textSize = 32;
-int delay = 10;
+int delay = 5;
 color bg = color(0);
 color normal = color(255, 255, 255);
 color highlight = color(255, 255, 0);
 
 
 void setup() {
-  size(640, 640);
+  //size(640, 640);
+  fullScreen();
   background(bg);
   rectMode(CENTER);
   textSize(textSize);
@@ -26,6 +26,7 @@ void setup() {
   texts.add("Hello, World!");
   texts.add("All in all it's just another brick in the wall");
   texts.add("I was put in charge of the music playlist for my Grandfather's funeral, which consisted of quite beautiful classical and choir music selected by my Grandmother. I had everything set up in playlists on my Spotify account and felt a little nervous but prepared. I started to play the first playlist as people entered, but what I didn't realize is that the \"Up Next\" feature overrides the playlist feature, so instead of playing the next classical song in the playlist, my phone started to blare \"Born to Be Wild\". I heard it as I walked in and luckily cut it off, but not before I heard a few chuckles.");
+  texts.add("I was put in charge of the music playlist for my Grandfather's funeral, \nwhich consisted of quite beautiful classical and choir music \nselected by my Grandmother. I had everything set up in playlists on my Spotify account and felt a little nervous but prepared. I started to play the first playlist as people entered, but what I didn't realize is that the \"Up Next\" feature overrides the playlist feature, so instead of playing the next classical song in the playlist, my phone started to blare \"Born to Be Wild\". I heard it as I walked in and luckily cut it off, but not before I heard a few chuckles.");
 }
 
 void draw() {
@@ -90,10 +91,18 @@ String getNextTwoLines(int textIndex, int startIndex) {
   String u = "";
   int i = startIndex;
   while ((textWidth(t) < width - 64) && (i < text.length())) {
+    if(text.charAt(i) == '\n') {
+      i++;
+      break;
+    }
     t += text.charAt(i);
     i++;
   }
   while ((textWidth(u) < width - 64) && (i < text.length())) {
+    if(text.charAt(i) == '\n') {
+      i++;
+      break;
+    }
     u += text.charAt(i);
     i++;
   }
@@ -110,6 +119,7 @@ void drawChoose() {
   text("Confession 0: press 0", 30, 64);
   text("Confession 1: press 1", 30, 128);
   text("Confession 2: press 2", 30, 192);
+  text("Confession 3: press 3", 30, 256);
 }
 
 void keyTyped() {
