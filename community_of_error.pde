@@ -9,10 +9,12 @@ int currentLine = 0;
 int charIndex = 0;
 int charSkip = 0;
 int textSize = 32;
-int delay = 5;
+int delay = 20;
 color bg = color(0);
 color normal = color(255, 255, 255);
 color highlight = color(255, 255, 0);
+
+PImage logo;
 
 
 void setup() {
@@ -22,11 +24,21 @@ void setup() {
   rectMode(CENTER);
   textSize(textSize);
   mode = Mode.CHOOSE;
+  
   texts = new ArrayList<String>();
-  texts.add("Hello, World!");
-  texts.add("All in all it's just another brick in the wall");
-  texts.add("I was put in charge of the music playlist for my Grandfather's funeral, which consisted of quite beautiful classical and choir music selected by my Grandmother. I had everything set up in playlists on my Spotify account and felt a little nervous but prepared. I started to play the first playlist as people entered, but what I didn't realize is that the \"Up Next\" feature overrides the playlist feature, so instead of playing the next classical song in the playlist, my phone started to blare \"Born to Be Wild\". I heard it as I walked in and luckily cut it off, but not before I heard a few chuckles.");
-  texts.add("I was put in charge of the music playlist for my Grandfather's funeral, \nwhich consisted of quite beautiful classical and choir music \nselected by my Grandmother. I had everything set up in \nplaylists on my Spotify account and felt a little nervous but prepared. \nI started to play the first playlist as people entered, \nbut what I didn't realize is that the \"Up Next\" feature \noverrides the playlist feature, so instead of playing the next classical song \nin the playlist, my phone started to blare \"Born to Be Wild\". \nI heard it as I walked in and luckily cut it off, \nbut not before I heard a few chuckles.");
+  texts.add("I was unfaithful to my partner and that made me appreciate and respect my partner more, it made me not look too much at their defects, it made me spent more time together and I realised I deeply love my partner.");
+  texts.add("I used to not clean my feet well when I was using the public swimming pool showers and that made me get a fungal infection, from then on when I shower I take special care in my feet and between my fingers, which made my health improve considerably.");
+  texts.add("When I was 16 I was very rebellious, I was misbehaving all the time, so my mother decided to put me in a boarding school, at the beginning I hated it because I had to leave my city and my friends but then there I met loads of nice friends and I have wonderful memories of my time there in the boarding school.");
+  texts.add("When I was young I was hanging out with the wrong people, I did stupid things, but I managed to get out of it and become a better person to the point of helping and volunteering in centres where they treat people with different kind of life problems.");
+  texts.add("Once I lost my flight because I overslept so since then I’ve been very careful and I make sure I have at least two alarm clocks going when I have very important schedules.");
+  texts.add("I was in a bad marriage with the wrong person but from that error I had two nice children.");
+  texts.add("My error was to study photography, because I wasted a lot of time, but thanks to it I went to USA and discovered making porcelain.");
+  texts.add("I didn’t like someone at the beginning when we met for the first time but in the end we became the best friends.");
+  texts.add("I lied to my father when I was a teenager and the next day I thought I needed to tell him the truth, he didn’t like what I said to him but from then on he started to treat me as an adult and respect my decisions.");
+  texts.add("I got a book by mistake from the library and then I discovered a new author that I really like now.");
+  
+  //TODO ok gifs won't work
+  logo = loadImage("logo.png");
 }
 
 void draw() {
@@ -113,15 +125,15 @@ String getNextTwoLines(int textIndex, int startIndex) {
 
 void drawLogo() {
   //TODO placeholder for logo
-  rect(width/2, height/2, 256, 256);
+  //rect(width/2, height/2, 256, 256);
+  image(logo, width/2 - 128, height/2 - 128, 256, 256);
 }
 
 void drawChoose() {
   background(bg);
-  text("Confession 0: press 0", 30, 64);
-  text("Confession 1: press 1", 30, 128);
-  text("Confession 2: press 2", 30, 192);
-  text("Confession 3: press 3", 30, 256);
+  for (int i = 0; i < texts.size(); i++) {
+    text("Confession " + (i+1) + ": press " + ((i+1)%10), 30, 32 + (i*64));
+  }
 }
 
 void keyTyped() {
