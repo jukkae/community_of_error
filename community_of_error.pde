@@ -8,13 +8,15 @@ int chosenTextIndex;
 int currentLine = 0;
 int charIndex = 0;
 int charSkip = 0;
-int textSize = 32;
-int delay = 20;
+int textSize = 48;
+int delay = 100;
 color bg = color(0);
 color normal = color(255, 255, 255);
 color highlight = color(255, 255, 0);
 
 PImage logo;
+ArrayList<PImage> animation;
+int animFrame = 0;
 
 
 void setup() {
@@ -24,7 +26,7 @@ void setup() {
   rectMode(CENTER);
   textSize(textSize);
   mode = Mode.CHOOSE;
-  
+
   texts = new ArrayList<String>();
   texts.add("I was unfaithful to my partner and that made me appreciate and respect my partner more, it made me not look too much at their defects, it made me spent more time together and I realised I deeply love my partner.");
   texts.add("I used to not clean my feet well when I was using the public swimming pool showers and that made me get a fungal infection, from then on when I shower I take special care in my feet and between my fingers, which made my health improve considerably.");
@@ -36,9 +38,18 @@ void setup() {
   texts.add("I didn’t like someone at the beginning when we met for the first time but in the end we became the best friends.");
   texts.add("I lied to my father when I was a teenager and the next day I thought I needed to tell him the truth, he didn’t like what I said to him but from then on he started to treat me as an adult and respect my decisions.");
   texts.add("I got a book by mistake from the library and then I discovered a new author that I really like now.");
-  
+
   //TODO ok gifs won't work
   logo = loadImage("logo.png");
+  animation = new ArrayList<PImage>();
+  loadAnimation();
+}
+
+void loadAnimation() {
+  for(int i = 1; i < 12; i++) {
+    PImage p = loadImage("" + i + ".png");
+    animation.add(p);
+  }
 }
 
 void draw() {
@@ -91,10 +102,10 @@ void drawLine(String line, int charIndex, int yDis) {
   String t = line.substring(0, charIndex);
   String u = line.substring(charIndex);
   fill(highlight);
-  text(t, 64, yDis);
+  text(t, 128, yDis);
   float displacement = textWidth(t);
   fill(normal);
-  text(u, 64 + displacement, yDis);
+  text(u, 128 + displacement, yDis);
 }
 
 String getNextTwoLines(int textIndex, int startIndex) {
@@ -102,7 +113,7 @@ String getNextTwoLines(int textIndex, int startIndex) {
   String t = "";
   String u = "";
   int i = startIndex;
-  while ((textWidth(t) < width - 128) && (i < text.length())) {
+  while ((textWidth(t) < width - 256) && (i < text.length())) {
     if (text.charAt(i) == '\n' && (trim(t).length() > 0)) {
       i++;
       break;
@@ -112,7 +123,7 @@ String getNextTwoLines(int textIndex, int startIndex) {
     } else t+= text.charAt(i);
     i++;
   }
-  while ((textWidth(u) < width - 128) && (i < text.length())) {
+  while ((textWidth(u) < width - 256) && (i < text.length())) {
     if (text.charAt(i) == '\n') {
       i++;
       break;
@@ -126,17 +137,27 @@ String getNextTwoLines(int textIndex, int startIndex) {
 void drawLogo() {
   //TODO placeholder for logo
   //rect(width/2, height/2, 256, 256);
-  image(logo, width/2 - 128, height/2 - 128, 256, 256);
+  //image(logo, width/2 - 128, height/2 - 128, 256, 256);
+  image(animation.get(animFrame % animation.size()), width/2 - 128, height/2 - 128, 256, 256);
+  animFrame++;
 }
 
 void drawChoose() {
   background(bg);
   for (int i = 0; i < texts.size(); i++) {
-    text("Confession " + (i+1) + ": press " + ((i+1)%10), 30, 32 + (i*64));
+    text("Confession " + (i+1) + ": press " + ((i+1)%10), 30, 64 + (i*64));
   }
 }
 
 void keyTyped() {
-  chosenTextIndex = Character.getNumericValue(key);
-  mode = Mode.PERFORM;
+  switch (mode) {
+  case CHOOSE:
+    if (key >= 48 && key <= 57) {
+      chosenTextIndex = Character.getNumericValue(key);
+      mode = Mode.PERFORM;
+    }
+    break;
+  case PERFORM:
+    break;
+  }
 }
