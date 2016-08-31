@@ -26,7 +26,7 @@ void setup() {
   texts.add("Hello, World!");
   texts.add("All in all it's just another brick in the wall");
   texts.add("I was put in charge of the music playlist for my Grandfather's funeral, which consisted of quite beautiful classical and choir music selected by my Grandmother. I had everything set up in playlists on my Spotify account and felt a little nervous but prepared. I started to play the first playlist as people entered, but what I didn't realize is that the \"Up Next\" feature overrides the playlist feature, so instead of playing the next classical song in the playlist, my phone started to blare \"Born to Be Wild\". I heard it as I walked in and luckily cut it off, but not before I heard a few chuckles.");
-  texts.add("I was put in charge of the music playlist for my Grandfather's funeral, \nwhich consisted of quite beautiful classical and choir music \nselected by my Grandmother. I had everything set up in playlists on my Spotify account and felt a little nervous but prepared. I started to play the first playlist as people entered, but what I didn't realize is that the \"Up Next\" feature overrides the playlist feature, so instead of playing the next classical song in the playlist, my phone started to blare \"Born to Be Wild\". I heard it as I walked in and luckily cut it off, but not before I heard a few chuckles.");
+  texts.add("I was put in charge of the music playlist for my Grandfather's funeral, \nwhich consisted of quite beautiful classical and choir music \nselected by my Grandmother. I had everything set up in \nplaylists on my Spotify account and felt a little nervous but prepared.\n I started to play the first playlist as people entered, but what I didn't realize is that the \"Up Next\" feature overrides the playlist feature, so instead of playing the next classical song in the playlist, my phone started to blare \"Born to Be Wild\". I heard it as I walked in and luckily cut it off, but not before I heard a few chuckles.");
 }
 
 void draw() {
@@ -79,10 +79,10 @@ void drawLine(String line, int charIndex, int yDis) {
   String t = line.substring(0, charIndex);
   String u = line.substring(charIndex);
   fill(highlight);
-  text(t, 30, yDis);
+  text(t, 64, yDis);
   float displacement = textWidth(t);
   fill(normal);
-  text(u, 30 + displacement, yDis);
+  text(u, 64 + displacement, yDis);
 }
 
 String getNextTwoLines(int textIndex, int startIndex) {
@@ -90,15 +90,18 @@ String getNextTwoLines(int textIndex, int startIndex) {
   String t = "";
   String u = "";
   int i = startIndex;
-  while ((textWidth(t) < width - 64) && (i < text.length())) {
-    if(text.charAt(i) == '\n') {
+  while ((textWidth(t) < width - 128) && (i < text.length())) {
+    if(text.charAt(i) == '\n' && (trim(t).length() > 0)) {
       i++;
       break;
     }
-    t += text.charAt(i);
+    if(text.charAt(i) == ' ' || text.charAt(i) == '\n'){
+      if(trim(t).length() > 0) t += text.charAt(i);
+    }
+    else t+= text.charAt(i);
     i++;
   }
-  while ((textWidth(u) < width - 64) && (i < text.length())) {
+  while ((textWidth(u) < width - 128) && (i < text.length())) {
     if(text.charAt(i) == '\n') {
       i++;
       break;
@@ -106,6 +109,9 @@ String getNextTwoLines(int textIndex, int startIndex) {
     u += text.charAt(i);
     i++;
   }
+  println("length(t) = " + t.length());
+  println("t: " + t);
+  println("u: " + u);
   return t + "\n" + u;
 }
 
