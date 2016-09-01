@@ -10,11 +10,10 @@ int charIndex = 0;
 int charSkip = 0;
 int textSize = 48;
 int delay = 100;
-color bg = color(0);
-color normal = color(255, 255, 255);
-color highlight = color(255, 255, 0);
+color bg = color(255);
+color normal = color(0, 0, 0);
+color highlight = color(255, 0, 0);
 
-PImage logo;
 ArrayList<PImage> animation;
 int animFrame = 0;
 
@@ -39,8 +38,6 @@ void setup() {
   texts.add("I lied to my father when I was a teenager and the next day I thought I needed to tell him the truth, he didn’t like what I said to him but from then on he started to treat me as an adult and respect my decisions.");
   texts.add("I got a book by mistake from the library and then I discovered a new author that I really like now.");
 
-  //TODO ok gifs won't work
-  logo = loadImage("logo.png");
   animation = new ArrayList<PImage>();
   loadAnimation();
 }
@@ -135,15 +132,15 @@ String getNextTwoLines(int textIndex, int startIndex) {
 }
 
 void drawLogo() {
-  //TODO placeholder for logo
-  //rect(width/2, height/2, 256, 256);
-  //image(logo, width/2 - 128, height/2 - 128, 256, 256);
-  image(animation.get(animFrame % animation.size()), width/2 - 128, height/2 - 128, 256, 256);
+  int dim = height;
+  image(animation.get(animFrame % animation.size()), width/2 - dim/2, height/2 - dim/2, dim, dim);
   animFrame++;
+  if(animFrame == Integer.MAX_VALUE) animFrame = 0;
 }
 
 void drawChoose() {
   background(bg);
+  fill(normal);
   for (int i = 0; i < texts.size(); i++) {
     text("Confession " + (i+1) + ": press " + ((i+1)%10), 30, 64 + (i*64));
   }
